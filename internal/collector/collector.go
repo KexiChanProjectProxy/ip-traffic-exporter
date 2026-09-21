@@ -11,7 +11,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 
-	"github.com/KexiChanProjectProxy/ebpf-prometheus-exporter/internal/probe"
+	"github.com/KexiChanProjectProxy/ip-traffic-exporter/internal/probe"
 )
 
 // Source is one attached interface.

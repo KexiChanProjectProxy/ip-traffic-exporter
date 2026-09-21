@@ -8,7 +8,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/testutil"
 
-	"github.com/KexiChanProjectProxy/ebpf-prometheus-exporter/internal/probe"
+	"github.com/KexiChanProjectProxy/ip-traffic-exporter/internal/probe"
 )
 
 type fakeSource struct {

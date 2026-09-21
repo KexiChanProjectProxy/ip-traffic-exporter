@@ -1,4 +1,4 @@
-module github.com/KexiChanProjectProxy/ebpf-prometheus-exporter
+module github.com/KexiChanProjectProxy/ip-traffic-exporter
 
 go 1.26.2
 

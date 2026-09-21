@@ -24,8 +24,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/KexiChanProjectProxy/ebpf-prometheus-exporter/internal/collector"
-	"github.com/KexiChanProjectProxy/ebpf-prometheus-exporter/internal/probe"
+	"github.com/KexiChanProjectProxy/ip-traffic-exporter/internal/collector"
+	"github.com/KexiChanProjectProxy/ip-traffic-exporter/internal/probe"
 )
 
 func main() {
