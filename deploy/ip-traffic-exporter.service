@@ -1,0 +1,20 @@
+[Unit]
+Description=eBPF per-IP traffic Prometheus exporter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/ip-traffic-exporter -iface eno1 -listen :9842
+Restart=on-failure
+RestartSec=5
+
+DynamicUser=yes
+AmbientCapabilities=CAP_BPF CAP_NET_ADMIN CAP_PERFMON
+CapabilityBoundingSet=CAP_BPF CAP_NET_ADMIN CAP_PERFMON
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
