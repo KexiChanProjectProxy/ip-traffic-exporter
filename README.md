@@ -14,6 +14,16 @@ flowtable fast path.
 - `CAP_BPF`, `CAP_NET_ADMIN`, `CAP_PERFMON` (or root)
 - Build: Go only. Regenerating the BPF object (`make generate`) also needs clang.
 
+## Install
+
+```
+go install github.com/KexiChanProjectProxy/ip-traffic-exporter@latest
+```
+
+The compiled BPF object is embedded, so no clang or kernel headers are
+needed. Cross-compile with e.g. `GOARCH=arm64 go install ...` or
+`make build-arm64`. `ip-traffic-exporter -version` prints the build.
+
 ## Usage
 
 ```

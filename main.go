@@ -14,6 +14,7 @@ import (
 	"net/netip"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"slices"
 	"strings"
 	"syscall"
@@ -44,6 +45,7 @@ func run() error {
 		idle        = flag.Duration("idle-timeout", time.Hour, "forget addresses without traffic for this long")
 		maxEntries  = flag.Uint("max-entries", 16384, "max tracked addresses per interface (LRU evicted)")
 		debug       = flag.Bool("debug", false, "debug logging")
+		showVersion = flag.Bool("version", false, "print version and exit")
 		localNets   []netip.Prefix
 	)
 	flag.Func("local-cidr", "local network to account, repeatable (default: the networks of each interface's addresses)", func(s string) error {
@@ -56,6 +58,10 @@ func run() error {
 	})
 	flag.Parse()
 
+	if *showVersion {
+		fmt.Println("ip-traffic-exporter", version())
+		return nil
+	}
 	if *debug {
 		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
@@ -124,7 +130,7 @@ func run() error {
 
 	errc := make(chan error, 1)
 	go func() { errc <- srv.ListenAndServe() }()
-	slog.Info("listening", "addr", *listen)
+	slog.Info("listening", "addr", *listen, "version", version())
 
 	select {
 	case err := <-errc:
@@ -135,6 +141,33 @@ func run() error {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	return srv.Shutdown(shutdownCtx)
+}
+
+// version returns the module version (set by go install) or, for local
+// builds, the VCS revision.
+func version() string {
+	bi, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "unknown"
+	}
+	if v := bi.Main.Version; v != "" && v != "(devel)" {
+		return v
+	}
+	var rev, dirty string
+	for _, s := range bi.Settings {
+		switch s.Key {
+		case "vcs.revision":
+			rev = s.Value
+		case "vcs.modified":
+			if s.Value == "true" {
+				dirty = "-dirty"
+			}
+		}
+	}
+	if rev == "" {
+		return "devel"
+	}
+	return rev[:min(12, len(rev))] + dirty
 }
 
 // interfaceNets returns the networks of the interface's global addresses.
